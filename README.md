@@ -1,4 +1,4 @@
-# 🎬 TikTok Downloader Bot
+# 🎬 Video Downloader Bot
 
 <div align="center">
 
@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Telegram](https://img.shields.io/badge/Telegram-Bot-blue.svg)
 
-**Telegram бот для скачивания видео и фото из TikTok в максимальном качестве**
+**Telegram бот для скачивания видео из TikTok, YouTube и Pinterest в максимальном качестве**
 
 [⚡️ Возможности](#-возможности) • [🚀 Установка](#-установка) • [💻 Использование](#-использование)
 
@@ -18,10 +18,10 @@
 ## ✨ Возможности
 
 - 🎥 **Скачивание видео** в максимальном качестве
-- 📸 **Поддержка фото/слайдов** — отправка до 10 изображений
+- 📸 **Поддержка фото/слайдов** — отправка до 10 изображений (TikTok)
 - ⚡ **Параллельные загрузки** — неограниченное количество пользователей
 -  **Автоматическая очистка** — временные файлы удаляются
-- 🔗 **Все форматы ссылок** — `vm.tiktok.com`, `tiktok.com/@user/video`, `tiktok.com/@user/photo`
+- 🔗 **Множество платформ** — TikTok, YouTube, Pinterest
 
 ## 🚀 Установка
 
@@ -74,15 +74,24 @@ python bot.py
 
 1. Найдите бота в Telegram
 2. Отправьте `/start`
-3. Отправьте ссылку на TikTok видео/фото
+3. Отправьте ссылку на видео (TikTok, YouTube, Pinterest)
 4. Получите контент в максимальном качестве!
 
 ## 🔗 Поддерживаемые ссылки
 
+**TikTok:**
 - `https://vm.tiktok.com/xxxxx` — короткие ссылки
 - `https://vt.tiktok.com/xxxxx` — короткие ссылки
 - `https://www.tiktok.com/@user/video/xxxxx` — видео
 - `https://www.tiktok.com/@user/photo/xxxxx` — фото/слайды
+
+**YouTube:**
+- `https://www.youtube.com/watch?v=xxxxx` — видео
+- `https://youtu.be/xxxxx` — короткие ссылки
+
+**Pinterest:**
+- `https://www.pinterest.com/pin/xxxxx` — пины
+- `https://pin.it/xxxxx` — короткие ссылки
 
 ##  Технологии
 
