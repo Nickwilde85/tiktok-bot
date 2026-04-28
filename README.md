@@ -33,7 +33,7 @@
 
 1. **Клонируйте репозиторий**
 ```bash
-git clone https://github.com/yourusername/tiktok-bot.git
+git clone https://github.com/Nickwiilde85/tiktok-bot.git
 cd tiktok_bot
 ```
 
