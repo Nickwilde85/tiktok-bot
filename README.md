@@ -70,14 +70,11 @@ sudo apt update && sudo apt upgrade -y
 
 #### 2. Установите Python 3.9+
 ```bash
-# Для Ubuntu 22.04+ (Python 3.10 по умолчанию)
+# Для Ubuntu 26.04+ (Python 3.12+ по умолчанию)
 sudo apt install python3 python3-pip python3-venv -y
 
-# Для старых версий Ubuntu добавьте PPA:
-sudo apt install software-properties-common -y
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.9 python3.9-pip python3.9-venv -y
+# Или установите конкретную версию (рекомендуется Python 3.11-3.12):
+sudo apt install python3.12 python3.12-pip python3.12-venv -y
 ```
 
 #### 3. Проверьте установку
@@ -91,6 +88,15 @@ pip3 --version
 echo 'alias python=python3' >> ~/.bashrc
 echo 'alias pip=pip3' >> ~/.bashrc
 source ~/.bashrc
+```
+
+#### Для старых версий Ubuntu (20.04, 22.04)
+Если у вас старая версия и нужен Python 3.9+:
+```bash
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.12 python3.12-pip python3.12-venv -y
 ```
 
 </details>
