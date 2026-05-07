@@ -152,6 +152,7 @@ def download_video_content(url: str, temp_dir: str) -> dict:
         'merge_output_format': 'mp4',
         'socket_timeout': 60,
         'retries': 3,
+        'noplaylist': True,
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Referer': referer,
