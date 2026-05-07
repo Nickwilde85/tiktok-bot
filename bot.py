@@ -139,6 +139,8 @@ def download_video_content(url: str, temp_dir: str) -> dict:
         referer = 'https://www.youtube.com/'
     elif 'pinterest.com' in url or 'pin.it' in url:
         referer = 'https://www.pinterest.com/'
+    elif 'twitter.com' in url or 'x.com' in url or 't.co' in url:
+        referer = 'https://x.com/'
     else:
         referer = url
     
@@ -193,7 +195,7 @@ async def cmd_help(message: Message):
         "🔗 <b>Поддерживаемые платформы:</b>\n"
         "• TikTok: vm.tiktok.com, tiktok.com/@user/video, tiktok.com/@user/photo\n"
         "• YouTube: youtube.com/watch?v=, youtu.be/\n"
-        "• Pinterest: pinterest.com/pin/, pin.it/",
+        "• Pinterest: pinterest.com/pin/, pin.it/\n""        "• Twitter/X: twitter.com, x.com, t.co/",
         parse_mode="HTML"
     )
 
@@ -247,7 +249,7 @@ async def process_download(message: Message, url: str):
         )
 
 
-@dp.message(F.text.regexp(r'https?://(?:www\.)?(?:tiktok\.com|vm\.tiktok\.com|vt\.tiktok\.com|youtube\.com|youtu\.be|pinterest\.com|pin\.it)/.+'))
+@dp.message(F.text.regexp(r'https?://(?:www\.)?(?:tiktok.com|vm.tiktok.com|vt.tiktok.com|youtube.com|youtu.be|pinterest.com|pin.it|twitter.com|x.com|t.co)/.+'))
 async def download_video(message: Message):
     url = message.text.strip()
     await process_download(message, url)
