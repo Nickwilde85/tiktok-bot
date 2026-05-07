@@ -9,7 +9,7 @@
 
 **Telegram бот для скачивания видео из TikTok, YouTube и Pinterest в максимальном качестве**
 
-[⚡️ Возможности](#-возможности) • [📦 Установка Python](#-установка-python-39) • [🚀 Установка бота](#-установка-бота) • [💻 Использование](#-использование)
+[⚡️ Возможности](#-возможности) • [📦 Установка](#-установка) • [🔧 Настройка прокси](#-настройка-прокси-для-tiktok) • [🛠️ Решение проблем](#-решение-проблем)
 
 </div>
 
@@ -17,203 +17,253 @@
 
 ## ✨ Возможности
 
-- 🎥 **Скачивание видео** в максимальном качестве
+- 🎥 **Скачивание видео** в максимальном качестве (до 4K, если доступно)
 - 📸 **Поддержка фото/слайдов** — отправка до 10 изображений (TikTok)
-- ⚡ **Параллельные загрузки** — неограниченное количество пользователей
--  **Автоматическая очистка** — временные файлы удаляются
+- ⚡ **Параллельные загрузки** — неограниченное количество пользователей одновременно
+- 🗑️ **Автоматическая очистка** — временные файлы удаляются автоматически
 - 🔗 **Множество платформ** — TikTok, YouTube, Pinterest
+- 🔄 **Продвинутые ретраи** — автоматические повторные попытки при ошибках
+- 🚀 **Автозапуск** — systemd сервис для Linux серверов
 
-## 🚀 Установка
+---
 
-### Требования
-- Python 3.9+
-- Telegram Bot Token (получить у [@BotFather](https://t.me/BotFather))
+## 📋 Системные требования
 
-### 📦 Установка Python 3.9+
+| Компонент | Минимум | Рекомендуется |
+|-----------|---------|---------------|
+| Python | 3.9+ | 3.11-3.12 |
+| RAM | 512 MB | 1 GB+ |
+| Disk | 2 GB свободно | 5 GB+ |
+| Network | Стабильное соединение | Proxy (для TikTok) |
+
+---
+
+## 📦 Установка
+
+### 1️⃣ Установка Python
 
 <details>
-<summary><b>Windows</b></summary>
+<summary><b>🪟 Windows</b></summary>
 
-#### 1. Проверьте, установлен ли Python
-Откройте PowerShell или CMD и выполните:
 ```powershell
-python --version
-```
-Если вы видите версию 3.9 или выше — Python уже установлен. Пропустите шаги ниже.
+# 1. Скачайте Python с https://python.org/downloads
+# 2. Запустите установщик
+# 3. ⚠️ ОБЯЗАТЕЛЬНО отметьте "Add Python to PATH"
+# 4. Нажмите "Install Now"
 
-#### 2. Скачайте установщик Python
-1. Перейдите на официальный сайт: https://python.org/downloads
-2. Нажмите **"Download Python 3.x.x"** (большая жёлтая кнопка)
-3. Или выберите конкретную версию **Python 3.9+** из списка
-
-#### 3. Установите Python
-1. Запустите скачанный файл `.exe`
-2. **ВАЖНО:** Отметьте галочку ☑️ **"Add Python to PATH"** внизу окна
-3. Нажмите **"Install Now"**
-4. Дождитесь завершения установки
-
-#### 4. Проверьте установку
-```powershell
-python --version
+# Проверка установки:
+python --version  # Должно показать 3.9+
 pip --version
 ```
-
 </details>
 
 <details>
-<summary><b>Linux (Ubuntu/Debian)</b></summary>
+<summary><b>🐧 Linux (Ubuntu/Debian)</b></summary>
 
-#### 1. Обновите пакеты
 ```bash
+# Обновите систему
 sudo apt update && sudo apt upgrade -y
+
+# Установите Python и необходимые пакеты
+sudo apt install -y python3 python3-pip python3-venv git curl
+
+# Проверьте версию
+python3 --version  # Должно быть 3.9+
 ```
 
-#### 2. Установите Python 3.9+
-```bash
-# Для Ubuntu 26.04+ (Python 3.12+ по умолчанию)
-sudo apt install python3 python3-pip python3-venv -y
-
-# Или установите конкретную версию (рекомендуется Python 3.11-3.12):
-sudo apt install python3.12 python3.12-pip python3.12-venv -y
-```
-
-#### 3. Проверьте установку
-```bash
-python3 --version
-pip3 --version
-```
-
-#### 4. Создайте алиасы (опционально)
-```bash
-echo 'alias python=python3' >> ~/.bashrc
-echo 'alias pip=pip3' >> ~/.bashrc
-source ~/.bashrc
-```
-
-#### Для старых версий Ubuntu (20.04, 22.04)
-Если у вас старая версия и нужен Python 3.9+:
+**Для старых версий Ubuntu (20.04, 22.04):**
 ```bash
 sudo apt install software-properties-common -y
-sudo add-apt-repository ppa:deadsnakes/ppa
+sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt update
-sudo apt install python3.12 python3.12-pip python3.12-venv -y
+sudo apt install -y python3.12 python3.12-venv python3.12-pip
 ```
-
 </details>
 
 <details>
-<summary><b>macOS</b></summary>
+<summary><b>🍎 macOS</b></summary>
 
-#### Вариант 1: Через Homebrew (рекомендуется)
 ```bash
-# Установите Homebrew, если ещё нет
+# Через Homebrew (рекомендуется)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install python@3.11
 
-# Установите Python
-brew install python@3.9
-```
-
-#### Вариант 2: С официального сайта
-1. Скачайте установщик: https://python.org/downloads/macos
-2. Запустите `.pkg` файл
-3. Следуйте инструкциям установщика
-
-#### Проверьте установку
-```bash
+# Проверка
 python3 --version
-pip3 --version
 ```
-
 </details>
 
 ---
 
-### ❗ Решение проблем
+### 2️⃣ Установка бота
 
-<details>
-<summary><b>Команда "python" не найдена (Windows)</b></summary>
-
-1. Переустановите Python с галочкой **"Add Python to PATH"**
-2. Или добавьте вручную в переменные среды:
-   - `C:\Users\ВАШ_ПОЛЬЗОВАТЕЛЬ\AppData\Local\Programs\Python\Python39`
-   - `C:\Users\ВАШ_ПОЛЬЗОВАТЕЛЬ\AppData\Local\Programs\Python\Python39\Scripts`
-
-</details>
-
-<details>
-<summary><b>Ошибка "pip is not recognized"</b></summary>
-
-Переустановите pip:
-```bash
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-```
-
-</details>
-
-<details>
-<summary><b>Ошибка "No module named 'venv'" (Linux)</b></summary>
-
-Установите пакет python3-venv:
-```bash
-sudo apt install python3-venv -y
-```
-
-</details>
-
----
-
-### 🚀 Установка бота
-
-#### Шаги
-
-1. **Клонируйте репозиторий**
+#### Клонирование репозитория
 ```bash
 git clone https://github.com/Nickwilde85/tiktok-bot.git
-cd tiktok_bot
+cd tiktok-bot
 ```
 
-2. **Создайте виртуальное окружение**
+#### Создание виртуального окружения
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# или
-venv\Scripts\activate  # Windows
+# Создайте окружение
+python3 -m venv venv
+
+# Активируйте (Linux/macOS)
+source venv/bin/activate
+
+# Активируйте (Windows)
+venv\Scripts\activate
+
+# Вы увидите (venv) в начале строки - окружение активировано
 ```
 
-3. **Установите зависимости**
+#### Установка зависимостей
 ```bash
+# Обновите pip
+pip install --upgrade pip
+
+# Установите зависимости
 pip install -r requirements.txt
+
+# ⚠️ ВАЖНО: Установите curl_cffi (необходим для TikTok)
+pip install curl_cffi
 ```
 
-4. **Настройте окружение**
-```bash
-cp .env.example .env
-nano .env  # или любой редактор
-```
-Добавьте ваш `BOT_TOKEN`
+---
 
-## 🔑 Получение токена
+### 3️⃣ Настройка окружения
 
-1. Напишите [@BotFather](https://t.me/BotFather) в Telegram
+#### Получение Bot Token
+1. Откройте Telegram и найдите [@BotFather](https://t.me/BotFather)
 2. Отправьте команду `/newbot`
-3. Следуйте инструкциям для создания бота
-4. Скопируйте токен в файл `.env`
+3. Следуйте инструкциям:
+   - Введите имя бота (например: "My Video Bot")
+   - Введите username (например: "myvideobot" - должен заканчиваться на "bot")
+4. Скопируйте токен вида: `123456789:ABCdefGHIjklMNOpqrSTUvwxyz`
 
-## ▶️ Запуск
-
+#### Создание .env файла
 ```bash
-python bot.py
+# Скопируйте шаблон
+cp .env.example .env
+
+# Отредактируйте
+nano .env  # или используйте любой редактор
 ```
+
+#### Минимальная конфигурация
+```env
+BOT_TOKEN=your_telegram_bot_token_here
+```
+
+---
+
+## 🔧 Настройка прокси (для TikTok)
+
+### ⚠️ ВАЖНО
+TikTok активно блокирует запросы с серверов. Без прокси скачивание часто не работает!
+
+### Где купить прокси
+
+| Тип | Рекомендуемые провайдеры | Цена | Для TikTok |
+|-----|-------------------------|------|------------|
+| Резидентные | proxy-seller.io, proxy6.net | $3-10/мес | ✅ Отлично |
+| Мобильные | airproxy.io, litport.net | $10-30/мес | ✅ Лучший вариант |
+| Дата-центр | oxylabs.io, brightdata.com | $5-15/мес | ⚠️ Иногда блокируют |
+
+**Рекомендации:**
+- Геолокация: США, Великобритания, Германия
+- Тип: HTTP/HTTPS прокси
+- Формат: `http://user:pass@host:port`
+
+### Настройка в .env
+
+```env
+BOT_TOKEN=your_telegram_bot_token_here
+HTTP_PROXY=http://username:password@192.121.87.135:10673
+HTTPS_PROXY=http://username:password@192.121.87.135:10673
+```
+
+### Проверка прокси
+```bash
+# Тест через curl
+curl -x http://username:password@192.121.87.135:10673 https://www.tiktok.com
+
+# Если возвращает HTML - прокси работает
+```
+
+---
+
+## 🚀 Запуск бота
+
+### Ручной запуск (для тестирования)
+```bash
+cd /path/to/tiktok-bot
+source venv/bin/activate
+python bot.py
+
+# Для остановки нажмите Ctrl+C
+```
+
+### Автозапуск через systemd (Linux сервера)
+
+#### 1. Настройка сервиса
+```bash
+# Скопируйте сервис-файл
+sudo cp tiktok-bot.service /etc/systemd/system/
+
+# Отредактируйте пути под вашу систему
+sudo nano /etc/systemd/system/tiktok-bot.service
+```
+
+#### 2. Пример tiktok-bot.service
+```ini
+[Unit]
+Description=TikTok Downloader Bot
+After=network.target
+
+[Service]
+Type=simple
+User=your_username
+WorkingDirectory=/home/your_username/tiktok-bot
+ExecStart=/home/your_username/tiktok-bot/venv/bin/python /home/your_username/tiktok-bot/bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### 3. Запуск и автозагрузка
+```bash
+# Перезагрузить systemd
+sudo systemctl daemon-reload
+
+# Включить автозапуск
+sudo systemctl enable tiktok-bot
+
+# Запустить сервис
+sudo systemctl start tiktok-bot
+
+# Проверить статус
+sudo systemctl status tiktok-bot
+
+# Посмотреть логи
+sudo journalctl -u tiktok-bot -f
+```
+
+---
 
 ## 💻 Использование
 
-1. Найдите бота в Telegram
-2. Отправьте `/start`
-3. Отправьте ссылку на видео (TikTok, YouTube, Pinterest)
-4. Получите контент в максимальном качестве!
+### Команды бота
 
-## 🔗 Поддерживаемые ссылки
+| Команда | Описание |
+|---------|----------|
+| `/start` | Приветственное сообщение и инструкция |
+| `/help` | Помощь и поддерживаемые платформы |
+| Отправка URL | Скачивание видео/фото |
+
+### Поддерживаемые ссылки
 
 **TikTok:**
 - `https://vm.tiktok.com/xxxxx` — короткие ссылки
@@ -222,23 +272,219 @@ python bot.py
 - `https://www.tiktok.com/@user/photo/xxxxx` — фото/слайды
 
 **YouTube:**
-- `https://www.youtube.com/watch?v=xxxxx` — видео
+- `https://www.youtube.com/watch?v=xxxxx` — обычные ссылки
 - `https://youtu.be/xxxxx` — короткие ссылки
+- `https://www.youtube.com/shorts/xxxxx` — Shorts
 
 **Pinterest:**
 - `https://www.pinterest.com/pin/xxxxx` — пины
 - `https://pin.it/xxxxx` — короткие ссылки
 
-##  Технологии
+---
 
-- **Python 3.9+** — основной язык
-- **aiogram 3.x** — Telegram Bot API
-- **yt-dlp** — скачивание видео
+## 🛠️ Решение проблем
 
-## 📝 Лицензия
+### ❌ Ошибка: "Conflict: terminated by other getUpdates request"
 
-MIT License — свободно используйте в своих проектах
+**Причина:** Запущено несколько экземпляров бота с одним токеном.
 
-## 🤝 Вклад
+**Решение:**
+```bash
+# Найдите все процессы бота
+ps aux | grep bot.py
+
+# Убейте лишние процессы
+kill <PID>
+
+# Или перезапустите сервис
+sudo systemctl restart tiktok-bot
+```
+
+---
+
+### ❌ Ошибка: "Download timed out" / "Got error: timed out"
+
+**Причины:**
+1. TikTok блокирует IP
+2. Медленное соединение
+3. Нет прокси
+
+**Решение:**
+1. Установите curl_cffi:
+   ```bash
+   pip install curl_cffi
+   ```
+2. Настройте прокси в `.env` (см. раздел выше)
+3. Увеличьте таймаут в коде:
+   ```python
+   ydl_opts = {
+       'socket_timeout': 60,
+       'retries': 3,
+       # ... остальные опции
+   }
+   ```
+
+---
+
+### ❌ Ошибка: "No module named 'aiogram'"
+
+**Решение:**
+```bash
+# Убедитесь, что окружение активировано
+source venv/bin/activate
+
+# Переустановите зависимости
+pip install -r requirements.txt
+```
+
+---
+
+### ❌ Ошибка: "[TikTok] The extractor is attempting impersonation"
+
+**Решение:**
+```bash
+# Установите curl_cffi (критически важно!)
+pip install curl_cffi
+
+# Перезапустите бота
+sudo systemctl restart tiktok-bot
+```
+
+---
+
+### ❌ Бот не отвечает на сообщения
+
+**Проверьте:**
+```bash
+# 1. Статус сервиса
+sudo systemctl status tiktok-bot
+
+# 2. Логи ошибок
+sudo journalctl -u tiktok-bot -n 50 --no-pager
+
+# 3. Проверьте токен
+cat .env | grep BOT_TOKEN
+
+# 4. Проверьте, не запущен ли бот в другом месте
+ps aux | grep bot.py
+```
+
+---
+
+### ❌ Ошибка: "Video is too big"
+
+**Причина:** Telegram ограничивает размер файлов (50 MB для ботов).
+
+**Решение:**
+- Используйте ссылки на более короткие видео
+- Или измените формат в `bot.py`:
+  ```python
+  'format': 'best[filesize<50M]',  # Только файлы < 50MB
+  ```
+
+---
+
+## 📝 Обновление бота
+
+```bash
+cd /path/to/tiktok-bot
+
+# Сохраните .env
+cp .env /tmp/.env.backup
+
+# Обновите код
+git pull origin main
+
+# Восстановите .env
+cp /tmp/.env.backup .env
+
+# Обновите зависимости
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Перезапустите
+sudo systemctl restart tiktok-bot
+```
+
+---
+
+## 🔍 Диагностика
+
+### Проверка yt-dlp
+```bash
+# Тест скачивания
+yt-dlp --no-download --print title "https://www.tiktok.com/@username/video/123456"
+
+# Тест с прокси
+yt-dlp --proxy "http://user:pass@host:port" --no-download --print title "URL"
+```
+
+### Проверка прокси
+```bash
+# HTTP прокси
+curl -x http://user:pass@host:port https://www.tiktok.com -I
+
+# Должен вернуть: HTTP/2 200
+```
+
+### Полные логи
+```bash
+# Все логи бота
+sudo journalctl -u tiktok-bot --no-pager
+
+# Последние 100 строк с отслеживанием
+sudo journalctl -u tiktok-bot -f -n 100
+```
+
+---
+
+## 🆘 FAQ
+
+**Q: Почему TikTok не скачивается?**  
+A: TikTok блокирует серверные IP. Нужен резидентный/мобильный прокси.
+
+**Q: Можно ли использовать бесплатные прокси?**  
+A: Можно попробовать, но обычно они быстро банятся TikTok.
+
+**Q: Работает ли бот на Windows?**  
+A: Да, но systemd автозапуск доступен только на Linux.
+
+**Q: Как ограничить доступ к боту?**  
+A: Добавьте проверку user_id в `process_download()`.
+
+**Q: Где хранятся скачанные видео?**  
+A: Во временной директории `/tmp` - автоматически удаляются.
+
+---
+
+## 🛡️ Безопасность
+
+- **НЕ коммитьте `.env` файл** — там ваш токен!
+- **Используйте прокси** — защитит ваш сервер от банов
+- **Ограничьте доступ** к серверу через firewall
+
+---
+
+## 🤝 Вклад в проект
 
 Pull requests приветствуются!
+
+1. Форкните репозиторий
+2. Создайте ветку: `git checkout -b feature/my-feature`
+3. Коммитьте: `git commit -am 'Add feature'`
+4. Пуш: `git push origin feature/my-feature`
+5. Создайте Pull Request
+
+---
+
+## 📜 Лицензия
+
+MIT License — свободно используйте в своих проектах.
+
+---
+
+<div align="center">
+
+**⭐ Если проект полезен — поставьте звёздочку на GitHub!**
+
+</div>

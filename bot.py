@@ -148,6 +148,8 @@ def download_video_content(url: str, temp_dir: str) -> dict:
         'quiet': True,
         'no_warnings': True,
         'merge_output_format': 'mp4',
+        'socket_timeout': 60,
+        'retries': 3,
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Referer': referer,
@@ -221,8 +223,8 @@ async def process_download(message: Message, url: str):
         
         with tempfile.TemporaryDirectory() as temp_dir:
             loop = asyncio.get_event_loop()
-            content = await loop.run_in_executor(
-                None, download_video_content, url, temp_dir
+            content = await asyncio.wait_for(loop.run_in_executor(
+                None, download_video_content, url, temp_dir), timeout=90
             )
             
             video_file = FSInputFile(content['path'])
@@ -234,6 +236,9 @@ async def process_download(message: Message, url: str):
             
             await status_message.delete()
             
+    except asyncio.TimeoutError:
+        logger.error("Download timed out")
+        await status_message.edit_text("❌ Таймаут: скачивание заняло слишком много времени.\nПопробуйте другую ссылку или повторите позже.")
     except Exception as e:
         logger.error(f"Error downloading content: {e}")
         await status_message.edit_text(
