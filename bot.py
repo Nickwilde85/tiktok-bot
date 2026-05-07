@@ -195,7 +195,8 @@ async def cmd_help(message: Message):
         "🔗 <b>Поддерживаемые платформы:</b>\n"
         "• TikTok: vm.tiktok.com, tiktok.com/@user/video, tiktok.com/@user/photo\n"
         "• YouTube: youtube.com/watch?v=, youtu.be/\n"
-        "• Pinterest: pinterest.com/pin/, pin.it/\n""        "• Twitter/X: twitter.com, x.com, t.co/",
+        "• Pinterest: pinterest.com/pin/, pin.it/\n"
+        "• Twitter/X: twitter.com, x.com, t.co/",
         parse_mode="HTML"
     )
 
