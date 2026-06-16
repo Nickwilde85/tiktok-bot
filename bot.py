@@ -7,7 +7,7 @@ import re
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
 from aiogram.types import (
-    Message, FSInputFile, URLInputFile, InputMediaPhoto
+    Message, FSInputFile, URLInputFile
 )
 from dotenv import load_dotenv
 import yt_dlp
@@ -54,82 +54,9 @@ def download_tiktok_video(url: str, output_path: str) -> str:
         return ydl.prepare_filename(info)
 
 
-def normalize_tiktok_url(url: str) -> str:
-    """Convert photo URLs to video format for yt-dlp compatibility."""
-    # Replace /photo/ with /video/ for yt-dlp
-    url = re.sub(r'/photo/', '/video/', url)
-    return url
-
-
-async def extract_tiktok_photos(url: str) -> list:
-    """Extract photo URLs from TikTok photo post by parsing HTML."""
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Referer': 'https://www.tiktok.com/',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    }
-    
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=headers) as response:
-            html = await response.text()
-    
-    # Try to extract from JSON data in the page
-    # TikTok stores data in __NEXT_DATA__ or similar script tags
-    photo_urls = []
-    
-    # Pattern 1: Look for image URLs in the HTML (broader patterns)
-    patterns = [
-        r'https://[^"\'\\s]*tiktokcdn\.com[^"\'\\s]*',
-        r'https://[^"\'\\s]*byteimg\.com[^"\'\\s]*',
-        r'https://[^"\'\\s]*tiktok\.com[^"\'\\s]*img[^"\'\\s]*',
-    ]
-    
-    for pattern in patterns:
-        matches = re.findall(pattern, html)
-        for match in matches:
-            # Clean up the URL (remove trailing characters)
-            clean_url = match.split('?')[0].split('&')[0]
-            if clean_url not in photo_urls:
-                photo_urls.append(clean_url)
-    
-    # Pattern 2: Try to find JSON data with image URLs
-    json_patterns = [
-        r'"imagePost":\s*\{[^}]*"images":\s*\[([^\]]+)\]',
-        r'"images":\s*\[([^\]]+)\]',
-        r'"url":\s*"([^"]*tiktokcdn[^"]*)"',
-        r'"url":\s*"([^"]*byteimg[^"]*)"',
-    ]
-    
-    for pattern in json_patterns:
-        matches = re.findall(pattern, html)
-        for match in matches:
-            if isinstance(match, str):
-                if match not in photo_urls:
-                    photo_urls.append(match)
-            else:
-                for m in match:
-                    if isinstance(m, str) and m not in photo_urls:
-                        photo_urls.append(m)
-    
-    # Filter only image URLs
-    image_urls = []
-    for url in photo_urls:
-        if any(ext in url for ext in ['.jpg', '.jpeg', '.png', '.webp']):
-            if url not in image_urls:
-                image_urls.append(url)
-    
-    logger.info(f"Extracted {len(image_urls)} image URLs from HTML")
-    return image_urls[:10]  # Limit to 10 photos
-
 
 def download_video_content(url: str, temp_dir: str) -> dict:
     """Download video content from TikTok, YouTube, or Pinterest using yt-dlp."""
-    # Check if it's a TikTok photo post
-    if '/photo/' in url and 'tiktok.com' in url:
-        # Return marker that this needs async photo extraction
-        return {'type': 'photos_async', 'url': url}
-    
-    # It's a video - download it with yt-dlp
     output_path = os.path.join(temp_dir, "video.%(ext)s")
     
     # Determine platform for appropriate headers
@@ -179,7 +106,7 @@ async def cmd_start(message: Message):
     await message.answer(
         "👋 Привет! Я бот для скачивания видео.\n\n"
         "📱 Поддерживаемые платформы:\n"
-        "• TikTok (видео и фото)\n"
+        "• TikTok (видео)\n"
         "• YouTube\n"
         "• Pinterest\n\n"
         "⚡️ Просто отправь мне ссылку, и я скачаю контент в максимальном качестве!"
@@ -194,7 +121,7 @@ async def cmd_help(message: Message):
         "2. Дождись загрузки\n"
         "3. Получи контент в максимальном качестве!\n\n"
         "🔗 <b>Поддерживаемые платформы:</b>\n"
-        "• TikTok: vm.tiktok.com, tiktok.com/@user/video, tiktok.com/@user/photo\n"
+        "• TikTok: vm.tiktok.com, tiktok.com/@user/video\n"
         "• YouTube: youtube.com/watch?v=, youtu.be/\n"
         "• Pinterest: pinterest.com/pin/, pin.it/\n"
         "• Twitter/X: twitter.com, x.com, t.co/",
@@ -218,9 +145,7 @@ async def process_download(message: Message, url: str):
                 clean_query = f"v={query_params['v'][0]}"
                 url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}?{clean_query}"
         
-        # Normalize URL for yt-dlp (convert /photo/ to /video/ for TikTok)
-        url = normalize_tiktok_url(url)
-        logger.info(f"Normalized URL: {url}")
+        logger.info(f"Processing URL: {url}")
         
         # Download with yt-dlp
         await status_message.edit_text("📤 Отправляю видео...")

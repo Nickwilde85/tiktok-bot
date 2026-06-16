@@ -18,7 +18,6 @@
 ## ✨ Возможности
 
 - 🎥 **Скачивание видео** в максимальном качестве (до 4K, если доступно)
-- 📸 **Поддержка фото/слайдов** — отправка до 10 изображений (TikTok)
 - ⚡ **Параллельные загрузки** — неограниченное количество пользователей одновременно
 - 🗑️ **Автоматическая очистка** — временные файлы удаляются автоматически
 - 🔗 **Множество платформ** — TikTok, YouTube, Pinterest
@@ -269,7 +268,6 @@ sudo journalctl -u tiktok-bot -f
 - `https://vm.tiktok.com/xxxxx` — короткие ссылки
 - `https://vt.tiktok.com/xxxxx` — короткие ссылки
 - `https://www.tiktok.com/@user/video/xxxxx` — видео
-- `https://www.tiktok.com/@user/photo/xxxxx` — фото/слайды
 
 **YouTube:**
 - `https://www.youtube.com/watch?v=xxxxx` — обычные ссылки
